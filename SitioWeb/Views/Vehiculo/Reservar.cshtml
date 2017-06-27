@@ -1,0 +1,106 @@
+﻿@model SitioWeb.Models.Vehiculo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Vehiculo</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CantidadDisponible)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CantidadDisponible)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CantidadPuertas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CantidadPuertas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CiudadId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CiudadId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Marca)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Marca)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Modelo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Modelo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PrecioPorDia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PrecioPorDia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Puntaje)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Puntaje)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TieneAireAcon)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TieneAireAcon)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TieneDireccion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TieneDireccion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoCambio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoCambio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VehiculoCiudadId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VehiculoCiudadId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

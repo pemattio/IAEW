@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Api.Models.Reserva>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CodigoReserva)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaReserva)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdCliente)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdVendedor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Costo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrecioVenta)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdVehiculoCiudad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdCiudad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdPais)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CodigoReserva)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaReserva)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdCliente)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdVendedor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Costo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrecioVenta)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdVehiculoCiudad)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdCiudad)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdPais)
+        </td>
+        <td>
+            @Html.ActionLink("Cancelar", "Cancelar", new { id = item.Id })
+        </td>
+    </tr>
+}
+
+</table>

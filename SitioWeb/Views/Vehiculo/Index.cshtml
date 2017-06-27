@@ -1,0 +1,114 @@
+﻿@model IEnumerable<SitioWeb.Models.Vehiculo>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div class=" col-md-3">
+    @Html.DropDownList("Paises", new SelectList(ViewBag.Paises, "Id", "Nombre"), "Seleccione pais", new { @class = "form-control", @onchange = "cargoCiudad(this)" })
+</div>
+@if (ViewBag.Ciudades != null) {
+<div class=" col-md-3">
+    @Html.DropDownList("Ciudades", new SelectList(ViewBag.Ciudades, "Id", "Nombre"), "Seleccione ciudad", new { @class = "form-control", @onchange = "cargoVehiculo(this)" })
+</div> }
+ @if (Model != null) {
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CantidadDisponible)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CantidadPuertas)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CiudadId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Marca)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Modelo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrecioPorDia)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Puntaje)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TieneAireAcon)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TieneDireccion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TipoCambio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VehiculoCiudadId)
+        </th>
+        <th>
+            @Html.Label("Precio al publico")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CantidadDisponible)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CantidadPuertas)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CiudadId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Marca)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Modelo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrecioPorDia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Puntaje)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TieneAireAcon)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TieneDireccion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoCambio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VehiculoCiudadId)
+        </td>
+        <td>
+            @Html.Label(item.CalculoPrecioAlPublico().ToString())
+        </td>
+        <td>
+            
+            @Html.ActionLink("Reservar", "Reservar", new { id = item.Id })
+
+        </td>
+    </tr>
+}
+
+</table>}
+<script>
+    function cargoCiudad(item) {
+        location.href = '@Url.Action("Index", "Vehiculo")?idPais='+ item.value ;
+        ;
+    }
+    function cargoVehiculo(item) {
+        location.href = '@Url.Action("Index", "Vehiculo")?idCiudad=' + item.value;
+        ;
+    }
+</script>

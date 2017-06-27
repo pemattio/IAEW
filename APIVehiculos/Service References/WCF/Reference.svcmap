@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="403075d9-b228-402b-b9de-534cfb05f98b" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://romeroruben-001-site1.itempurl.com/WCFReservaVehiculos.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="WCFReservaVehiculos.wsdl" MetadataType="Wsdl" ID="7fd84e03-e58c-4478-883e-78c8916ba37a" SourceId="1" SourceUrl="http://romeroruben-001-site1.itempurl.com/WCFReservaVehiculos.svc?wsdl" />
+    <MetadataFile FileName="WCFReservaVehiculos.xsd" MetadataType="Schema" ID="1c589649-0a5b-4591-8aeb-71ff65747067" SourceId="1" SourceUrl="http://romeroruben-001-site1.itempurl.com/WCFReservaVehiculos.svc?xsd=xsd4" />
+    <MetadataFile FileName="WCFReservaVehiculos1.xsd" MetadataType="Schema" ID="a0bb3f64-6c64-4886-b04a-a8a71332ce90" SourceId="1" SourceUrl="http://romeroruben-001-site1.itempurl.com/WCFReservaVehiculos.svc?xsd=xsd0" />
+    <MetadataFile FileName="WCFReservaVehiculos2.xsd" MetadataType="Schema" ID="57336392-a8ac-4cd0-a359-aae61a62ea4b" SourceId="1" SourceUrl="http://romeroruben-001-site1.itempurl.com/WCFReservaVehiculos.svc?xsd=xsd1" />
+    <MetadataFile FileName="WCFReservaVehiculos3.xsd" MetadataType="Schema" ID="9e4a996d-7804-449e-ae95-36a97c121395" SourceId="1" SourceUrl="http://romeroruben-001-site1.itempurl.com/WCFReservaVehiculos.svc?xsd=xsd2" />
+    <MetadataFile FileName="WCFReservaVehiculos4.xsd" MetadataType="Schema" ID="427c29c0-5719-4961-82ef-a280f87de1c0" SourceId="1" SourceUrl="http://romeroruben-001-site1.itempurl.com/WCFReservaVehiculos.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

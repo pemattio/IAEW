@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.DataBaseModel" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.DataBaseModel" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://romeroruben-001-site1.itempurl.com/WCFReservaVehiculos.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ReservaEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ApellidoNombreCliente" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoReserva" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Estado" type="tns:EstadoReservaEnum" />
+      <xs:element minOccurs="0" name="FechaCancelacion" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaHoraDevolucion" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaHoraRetiro" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaReserva" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="LugarDevolucion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LugarRetiro" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NroDocumentoCliente" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TotalReserva" type="xs:decimal" />
+      <xs:element minOccurs="0" name="UsuarioCancelacion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UsuarioReserva" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="VehiculoPorCiudadEntity" nillable="true" type="tns:VehiculoPorCiudadEntity" />
+      <xs:element minOccurs="0" name="VehiculoPorCiudadId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReservaEntity" nillable="true" type="tns:ReservaEntity" />
+  <xs:simpleType name="EstadoReservaEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Activa">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Cancelada">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="EstadoReservaEnum" nillable="true" type="tns:EstadoReservaEnum" />
+  <xs:complexType name="VehiculoPorCiudadEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CantidadDisponible" type="xs:int" />
+      <xs:element minOccurs="0" name="CiudadEntity" nillable="true" type="tns:CiudadEntity" />
+      <xs:element minOccurs="0" name="CiudadId" type="xs:int" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="VehiculoEntity" nillable="true" type="tns:VehiculoEntity" />
+      <xs:element minOccurs="0" name="VehiculoId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="VehiculoPorCiudadEntity" nillable="true" type="tns:VehiculoPorCiudadEntity" />
+  <xs:complexType name="CiudadEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Nombre" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PaisEntity" nillable="true" type="tns:PaisEntity" />
+      <xs:element minOccurs="0" name="PaisId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CiudadEntity" nillable="true" type="tns:CiudadEntity" />
+  <xs:complexType name="PaisEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Nombre" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PaisEntity" nillable="true" type="tns:PaisEntity" />
+  <xs:complexType name="VehiculoEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CantidadPuertas" type="xs:int" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Marca" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Modelo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PrecioPorDia" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Puntaje" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TieneAireAcon" type="xs:boolean" />
+      <xs:element minOccurs="0" name="TieneDireccion" type="xs:boolean" />
+      <xs:element minOccurs="0" name="TipoCambio" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="VehiculoEntity" nillable="true" type="tns:VehiculoEntity" />
+  <xs:complexType name="ArrayOfReservaEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ReservaEntity" nillable="true" type="tns:ReservaEntity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfReservaEntity" nillable="true" type="tns:ArrayOfReservaEntity" />
+  <xs:complexType name="ArrayOfCiudadEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CiudadEntity" nillable="true" type="tns:CiudadEntity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCiudadEntity" nillable="true" type="tns:ArrayOfCiudadEntity" />
+  <xs:complexType name="ArrayOfPaisEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PaisEntity" nillable="true" type="tns:PaisEntity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPaisEntity" nillable="true" type="tns:ArrayOfPaisEntity" />
+</xs:schema>

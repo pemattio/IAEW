@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.Entities" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.Entities" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://romeroruben-001-site1.itempurl.com/WCFReservaVehiculos.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.DataBaseModel" />
+  <xs:complexType name="ConsultarVehiculosRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IdCiudad" type="xs:int" />
+      <xs:element minOccurs="0" name="FechaHoraRetiro" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaHoraDevolucion" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConsultarVehiculosRequest" nillable="true" type="tns:ConsultarVehiculosRequest" />
+  <xs:complexType name="ConsultarVehiculosDisponiblesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="VehiculosEncontrados" nillable="true" type="tns:ArrayOfVehiculoModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConsultarVehiculosDisponiblesResponse" nillable="true" type="tns:ConsultarVehiculosDisponiblesResponse" />
+  <xs:complexType name="ArrayOfVehiculoModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="VehiculoModel" nillable="true" type="tns:VehiculoModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfVehiculoModel" nillable="true" type="tns:ArrayOfVehiculoModel" />
+  <xs:complexType name="VehiculoModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CantidadDisponible" type="xs:int" />
+      <xs:element minOccurs="0" name="CantidadPuertas" type="xs:int" />
+      <xs:element minOccurs="0" name="CiudadId" type="xs:int" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Marca" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Modelo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PrecioPorDia" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Puntaje" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TieneAireAcon" type="xs:boolean" />
+      <xs:element minOccurs="0" name="TieneDireccion" type="xs:boolean" />
+      <xs:element minOccurs="0" name="TipoCambio" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="VehiculoCiudadId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="VehiculoModel" nillable="true" type="tns:VehiculoModel" />
+  <xs:complexType name="ReservarVehiculoRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ApellidoNombreCliente" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FechaHoraDevolucion" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaHoraRetiro" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="IdVehiculoCiudad" type="xs:int" />
+      <xs:element minOccurs="0" name="LugarDevolucion" type="tns:LugarRetiroDevolucion" />
+      <xs:element minOccurs="0" name="LugarRetiro" type="tns:LugarRetiroDevolucion" />
+      <xs:element minOccurs="0" name="NroDocumentoCliente" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReservarVehiculoRequest" nillable="true" type="tns:ReservarVehiculoRequest" />
+  <xs:simpleType name="LugarRetiroDevolucion">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Aeropuerto" />
+      <xs:enumeration value="TerminalBuses" />
+      <xs:enumeration value="Hotel" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="LugarRetiroDevolucion" nillable="true" type="tns:LugarRetiroDevolucion" />
+  <xs:complexType name="ReservarVehiculoResponse">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.DataBaseModel" minOccurs="0" name="Reserva" nillable="true" type="q1:ReservaEntity" />
+      <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReservarVehiculoResponse" nillable="true" type="tns:ReservarVehiculoResponse" />
+  <xs:complexType name="ConsultarReservasRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IncluirCanceladas" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConsultarReservasRequest" nillable="true" type="tns:ConsultarReservasRequest" />
+  <xs:complexType name="ConsultarReservasResponse">
+    <xs:sequence>
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.DataBaseModel" minOccurs="0" name="Reservas" nillable="true" type="q2:ArrayOfReservaEntity" />
+      <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConsultarReservasResponse" nillable="true" type="tns:ConsultarReservasResponse" />
+  <xs:complexType name="CancelarReservaRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CodigoReserva" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CancelarReservaRequest" nillable="true" type="tns:CancelarReservaRequest" />
+  <xs:complexType name="CancelarReservaResponse">
+    <xs:sequence>
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.DataBaseModel" minOccurs="0" name="Reserva" nillable="true" type="q3:ReservaEntity" />
+      <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CancelarReservaResponse" nillable="true" type="tns:CancelarReservaResponse" />
+  <xs:complexType name="ConsultarCiudadesRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IdPais" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConsultarCiudadesRequest" nillable="true" type="tns:ConsultarCiudadesRequest" />
+  <xs:complexType name="ConsultarCiudadesResponse">
+    <xs:sequence>
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.DataBaseModel" minOccurs="0" name="Ciudades" nillable="true" type="q4:ArrayOfCiudadEntity" />
+      <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConsultarCiudadesResponse" nillable="true" type="tns:ConsultarCiudadesResponse" />
+  <xs:complexType name="ConsultarPaisesResponse">
+    <xs:sequence>
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/WCFReservaVehiculos.Business.DataBaseModel" minOccurs="0" name="Paises" nillable="true" type="q5:ArrayOfPaisEntity" />
+      <xs:element minOccurs="0" name="TimeStamp" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConsultarPaisesResponse" nillable="true" type="tns:ConsultarPaisesResponse" />
+</xs:schema>
