@@ -257,7 +257,7 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\7_OWIN OAuth 2.0 Authorization Server\Constants\Constants.csproj">
+    <ProjectReference Include="..\Constants\Constants.csproj">
       <Project>{0c35c99a-514b-4a28-95e0-a591315afe0d}</Project>
       <Name>Constants</Name>
     </ProjectReference>
