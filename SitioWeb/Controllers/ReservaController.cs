@@ -46,7 +46,7 @@ namespace SitioWeb.Controllers
         }
 
 
-        public ActionResult Cancelar(int? id)
+        public ActionResult Cancelar(string id)
         {
             if (id == null)
             {
@@ -59,7 +59,7 @@ namespace SitioWeb.Controllers
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Reserva/CancelarReserva" + id).Result;
+                HttpResponseMessage Res = client.GetAsync("api/Reserva/CancelarReserva/" + id).Result;
                 if (Res.IsSuccessStatusCode)
                 {
                     var ReservaResponse = Res.Content.ReadAsStringAsync().Result;

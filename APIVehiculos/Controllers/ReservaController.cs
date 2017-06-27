@@ -34,7 +34,7 @@ namespace APIVehiculos.Controllers
         }
 
         [Route("api/Reservas/CancelarReserva/{idReserva}")]
-        [HttpPost]
+        [HttpGet]
         public IHttpActionResult CancelarReserva(string idReserva)
         {
             try

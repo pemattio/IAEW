@@ -245,6 +245,7 @@
     <Content Include="Views\Vehiculo\Index.cshtml" />
     <Content Include="Views\Reserva\Index.cshtml" />
     <Content Include="Views\Home\callBack.cshtml" />
+    <Content Include="Views\Reserva\Cancelar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
