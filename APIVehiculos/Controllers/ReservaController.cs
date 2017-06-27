@@ -35,11 +35,11 @@ namespace APIVehiculos.Controllers
 
         [Route("api/Reserva/CancelarReserva/{idReserva}")]
         [HttpGet]
-        public void CancelarReserva(int idReserva)
+        public void CancelarReserva(string idReserva)
         {
 
             var cliente = new WCF.WCFReservaVehiculosClient();
-            CancelarReservaRequest res = new CancelarReservaRequest { CodigoReserva = Convert.ToString(idReserva) };
+            CancelarReservaRequest res = new CancelarReservaRequest { CodigoReserva = idReserva };
             CancelarReservaResponse Reservas = cliente.CancelarReserva(res);
 
         }
@@ -55,12 +55,27 @@ namespace APIVehiculos.Controllers
                 FechaHoraDevolucion = reserva.FechaHoraDevolucion,
                 FechaHoraRetiro = reserva.FechaHoraRetiro,
                 IdVehiculoCiudad = reserva.VehiculoPorCiudadId,
-                LugarDevolucion = new APIVehiculos.WCF.LugarRetiroDevolucion{reserva.LugarDevolucion},
-                LugarRetiro = new APIVehiculos.WCF.LugarRetiroDevolucion{reserva.LugarRetiro},
+                LugarDevolucion = lugarRetiroDevolucion(reserva.LugarDevolucion),
+                LugarRetiro = lugarRetiroDevolucion(reserva.LugarRetiro),
                 NroDocumentoCliente = reserva.NroDocumentoCliente
             };
             ReservarVehiculoResponse Reservas = cliente.ReservarVehiculo(res);
 
+        }
+
+        private LugarRetiroDevolucion lugarRetiroDevolucion(string lugarRetiroDevolucion)
+        {
+            switch (lugarRetiroDevolucion)
+            {
+                case "0":
+                    return LugarRetiroDevolucion.Aeropuerto;
+                case "1":
+                    return LugarRetiroDevolucion.Hotel;
+                case "2":
+                    return LugarRetiroDevolucion.TerminalBuses;
+                default:
+                    return new LugarRetiroDevolucion();
+            }
         }
     }
 }
