@@ -96,7 +96,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "    {\r\n        \"ApellidoNombreCliente\": \"Mattio Paolo\",\r\n        \"FechaHoraDevolucion\": \"2017-01-01\",\r\n        \"FechaHoraRetiro\": \"2017-02-01\",\r\n        \"VehiculoPorCiudadId\": 2\r\n        \"LugarDevolucion\": 1,\r\n        \"LugarRetiro\": 2,\r\n        \"NroDocumentoCliente\": \"33029771\",\r\n    }"
+					"raw": "{\"ApellidoNombreCliente\": \"Mattio Paolo\",\"FechaHoraDevolucion\": \"2017-02-01\",\"FechaHoraRetiro\": \"2017-01-01\",\"VehiculoPorCiudadId\": 3,\"LugarDevolucion\": 1,\"LugarRetiro\": 2,\"NroDocumentoCliente\": \"33029771\"}"
 				},
 				"description": ""
 			},
