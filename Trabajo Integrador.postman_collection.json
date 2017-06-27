@@ -1,0 +1,106 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Trabajo Integrador",
+		"_postman_id": "5d0a308e-b747-c1d8-509a-f42269b162a3",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Vehiculos/Paises",
+			"request": {
+				"url": "http://localhost:61319/api/Vehiculos/Paises",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Vehiculos/Ciudades",
+			"request": {
+				"url": "http://localhost:61319/api/Vehiculos/Ciudades/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Vehiculos/VehiculosDisponibles",
+			"request": {
+				"url": "http://localhost:61319/api/Vehiculos/VehiculosDisponibles/2",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Reservas/ListadoDeReservas",
+			"request": {
+				"url": "http://localhost:61319/api/Reservas/ListadoDeReservas",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Reservas/ListadoDeReservasCanceladas",
+			"request": {
+				"url": "http://localhost:61319/api/Reservas/ListadoDeReservasCanceladas",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Reserva/CancelarReserva",
+			"request": {
+				"url": "http://localhost:61319/api/Reservas/CancelarReserva/1",
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Reserva/ReservarVehiculo",
+			"request": {
+				"url": "http://localhost:61319/api/Reservas/ReservarVehiculo",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"ApellidoNombreCliente\": \"Mattio Paolo\",\r\n        \"FechaHoraDevolucion\": \"2017-01-01\",\r\n        \"FechaHoraRetiro\": \"2017-02-01\",\r\n        \"VehiculoPorCiudadId\": 2\r\n        \"LugarDevolucion\": 1,\r\n        \"LugarRetiro\": 2,\r\n        \"NroDocumentoCliente\": \"33029771\",\r\n    }"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
