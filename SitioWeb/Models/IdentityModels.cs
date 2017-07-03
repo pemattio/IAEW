@@ -16,6 +16,6 @@ namespace SitioWeb.Models
 
         public System.Data.Entity.DbSet<SitioWeb.Models.Vehiculo> Vehiculoes { get; set; }
 
-        public System.Data.Entity.DbSet<Api.Models.Reserva> Reservas { get; set; }
+        public System.Data.Entity.DbSet<SitioWeb.Models.Reserva> Reservas { get; set; }
     }
 }

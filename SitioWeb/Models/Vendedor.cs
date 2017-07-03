@@ -7,21 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Api.Models
+namespace SitioWeb.Models
 {
     using System;
     using System.Collections.Generic;
     
     public partial class Vendedor
     {
-        public Vendedor()
-        {
-            this.Reserva = new HashSet<Reserva>();
-        }
-    
         public int Id { get; set; }
         public string Nombre { get; set; }
     
-        public virtual ICollection<Reserva> Reserva { get; set; }
     }
 }

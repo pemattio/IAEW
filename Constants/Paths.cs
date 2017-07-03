@@ -12,12 +12,10 @@ namespace Constants
         /// AuthorizationServer project should run on this URL
         /// </summary>
         public const string AuthorizationServerBaseAddress = "http://104.197.29.243:8080/openam";
-
         /// <summary>
         /// ResourceServer project should run on this URL
         /// </summary>
-        public const string ResourceServerBaseAddress = "http://localhost:61319";
-
+        public const string ResourceServerBaseAddress = "http://localhost:54705";
         /// <summary>
         /// AuthorizationCodeGrant project should be running on this URL.
         /// </summary>

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Api.Models;
 using SitioWeb.Models;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -25,24 +24,29 @@ namespace SitioWeb.Controllers
         // GET: /Reserva/
         public ActionResult Index()
         {
-          
-            List<Reserva> list = new List<Reserva>();  
-              
-            using (var client = new HttpClient())  
-            {  
-                client.BaseAddress = new Uri(Baseurl);  
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservas").Result;  
-                if (Res.IsSuccessStatusCode)  
-                {  
-                    var ReservaResponse = Res.Content.ReadAsStringAsync().Result;  
-                    list = JsonConvert.DeserializeObject<List<Reserva>>(ReservaResponse);  
-  
-                }  
-                
-                return View(list);  
-            }  
+            try
+            {
+
+                List<Reserva> list = new List<Reserva>();
+
+                using (var client = new HttpClient())
+                {
+                    AccessToken token = (AccessToken)Session["token"];
+                    client.BaseAddress = new Uri(Baseurl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservas/"+ token.access_token ).Result;
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var ReservaResponse = Res.Content.ReadAsStringAsync().Result;
+                        list = JsonConvert.DeserializeObject<List<Reserva>>(ReservaResponse);
+
+                    }
+
+                    return View(list);
+                }
+            }
+            catch { return RedirectToAction("Index", "Home"); }
         }
 
 
@@ -56,25 +60,20 @@ namespace SitioWeb.Controllers
 
             using (var client = new HttpClient())
             {
+                AccessToken token = (AccessToken)Session["token"];
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Reserva/CancelarReserva/" + id).Result;
+                HttpResponseMessage Res = client.GetAsync("api/Reserva/CancelarReserva/" + id+"/"+token.access_token).Result;
                 if (Res.IsSuccessStatusCode)
                 {
-                    var ReservaResponse = Res.Content.ReadAsStringAsync().Result;
-                    Reserva = JsonConvert.DeserializeObject<Reserva>(ReservaResponse);
+                    return RedirectToAction("Index", "Reserva");
 
                 }
-                if (Reserva == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(Reserva);
+                return RedirectToAction("Index", "Home");
             }
 
         }
-
 
         protected override void Dispose(bool disposing)
         {

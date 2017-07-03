@@ -12,6 +12,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using SitioWeb;
+using System.Text;
+
 
 namespace SitioWeb.Controllers
 {
@@ -24,29 +26,130 @@ namespace SitioWeb.Controllers
         // GET: /Vehiculo/       
         public ActionResult Index(int? idPais, int? idCiudad)
         {
-            ViewBag.Paises = ConsultarPaises();
-            if (idPais != null){
-                @ViewBag.paisSelec = idPais;
-                ViewBag.Ciudades = ConsultarCiudades(idPais);
-            }
-            if (idCiudad != null)
+            try
+            {
+                ViewBag.Paises = ConsultarPaises();
+                if (idPais != null)
+                {
+                    @ViewBag.paisSelec = idPais;
+                    ViewBag.Ciudades = ConsultarCiudades(idPais);
+                }
+                if (idCiudad != null)
                 {
                     List<Vehiculo> list = ConsultarVehiculos(idCiudad);
-                return View(list);
-                } else 
-                {
-                return View();
+                    Session["vehiculos"] = list;
+                    return View(list);
                 }
+                else
+                {
+                    return View();
+                }
+            }
+            catch { return RedirectToAction("Index", "Home"); }
             
         }
 
-        public ActionResult Reservar(int idVehiculo) 
+        public ActionResult Reservar(int Id) 
         {
-
-            return View();
+            ViewBag.Cliente = ConsultarCliente();
+            ViewBag.Vendedor = ConsultarVendedor();
+            List<Vehiculo> list = (List<Vehiculo>)Session["vehiculos"];
+            Vehiculo vehiculo = list.Single(a => a.Id ==Id);
+            return View(vehiculo);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CrearReserva(FormCollection form)
+        {
+            List<Vehiculo> list = (List<Vehiculo>)Session["vehiculos"];
+            Vehiculo vehiculo = list.Single(a => a.Id == Convert.ToInt32(form["Id"]));
+            Reserva reserva = new Reserva
+            { 
+                IdCliente = Convert.ToInt32(form["Clientes"]),
+                IdVendedor = Convert.ToInt32(form["Vendedores"]),
+                IdVehiculoCiudad = vehiculo.VehiculoCiudadId,
+                 FechaReserva= DateTime.Now.ToString(),
+                Costo = Convert.ToDecimal(vehiculo.PrecioPorDia),
+                FechaHoraDevolucion=form["FechaHoraDevolucion"],
+                FechaHoraRetiro = form["FechaHoraRetiro"],
+                 PrecioVenta = Convert.ToDecimal(form["CalculoPrecioAlPublico"]),
+                Id = Convert.ToInt32(form["Id"]),
+            };
+            if(!GuardarReserva(reserva))
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Reserva"); ;
 
+        }
+
+        private Boolean GuardarReserva(Reserva reserva)
+        {
+                var jsonRequest = JsonConvert.SerializeObject(reserva);
+
+                var httpContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                var cliente = new HttpClient()
+                {
+                    BaseAddress = new Uri(Baseurl)
+                };
+
+                var url = "api/Reservas/ReservarVehiculo";
+
+                var res = cliente.PostAsync(url, httpContent).Result;
+
+                if (!res.IsSuccessStatusCode)
+                {
+                    return false;
+
+                }
+                return true;
+        }
+
+        private List<Vendedor> ConsultarVendedor()
+        {
+            List<Vendedor> list = new List<Vendedor>();
+
+            using (var client = new HttpClient())
+            {
+
+                client.BaseAddress = new Uri(Baseurl);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Vendedor").Result;
+                if (Res.IsSuccessStatusCode)
+                {
+                    var VendedorResponse = Res.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<Vendedor>>((VendedorResponse));
+
+                }
+
+                return list;
+            }
+        }
+
+        private List<Cliente> ConsultarCliente()
+        {
+            List<Cliente> list = new List<Cliente>();
+
+            using (var client = new HttpClient())
+            {
+
+                client.BaseAddress = new Uri(Baseurl);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Cliente").Result;
+                if (Res.IsSuccessStatusCode)
+                {
+                    var ClienteResponse = Res.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<Cliente>>((ClienteResponse));
+
+                }
+
+                return list;
+            }
+        }
 
         public List<Pais> ConsultarPaises() 
         {
@@ -55,10 +158,12 @@ namespace SitioWeb.Controllers
             
             using (var client = new HttpClient())
             {
+                AccessToken token = (AccessToken)Session["token"];
+               
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises").Result;
+                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises/"+token.access_token ).Result;
                 if (Res.IsSuccessStatusCode)
                 {
                     var PaisResponse = Res.Content.ReadAsStringAsync().Result;
@@ -76,6 +181,7 @@ namespace SitioWeb.Controllers
 
             using (var client = new HttpClient())
             {
+               
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

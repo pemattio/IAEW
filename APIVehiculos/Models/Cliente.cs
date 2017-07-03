@@ -9,21 +9,18 @@
 
 namespace APIVehiculos.Models
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     
-    public partial class Cliente
+    public  class Cliente
     {
-        public Cliente()
-        {
-            this.Reserva = new HashSet<Reserva>();
-        }
-    
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string NroDocumento { get; set; }
-    
+
+        [JsonIgnore]
         public virtual ICollection<Reserva> Reserva { get; set; }
     }
 }

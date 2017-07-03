@@ -1,13 +1,19 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SitioWeb.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Constants;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using SitioWeb.Models;
+
 
 namespace SitioWeb.Controllers
 {
@@ -20,38 +26,39 @@ namespace SitioWeb.Controllers
 
         public ActionResult callBack(string code, string scope, string state)
         {
-            AccessToken token=SolicitarAccessToken(code);
+            Session["token"] = SolicitarAccesToken(code);
             return View();
             
         }
-
-        private AccessToken SolicitarAccessToken(string code)
+        private AccessToken SolicitarAccesToken(string code)
         {
-            //string resultado = "";
+            AccessToken resultado = new AccessToken();
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://104.197.29.243:8080/");
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var contenido = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                new KeyValuePair<string, string>("client_id", Clients.Client1.Id),
-                new KeyValuePair<string, string>("client_secret", Clients.Client1.Secret),
-                new KeyValuePair<string, string>("code", code),
-                new KeyValuePair<string, string>("redirect_uri", Paths.AuthorizeCodeCallBackPath)
-            });
-                HttpResponseMessage Res = client.PostAsync("openam/oauth2/access_token", contenido).Result;
-                AccessToken token=new AccessToken();
+                client.BaseAddress = new Uri("http://104.197.29.243:8080");
+
+                var form = new Dictionary<string, string>  
+               {  
+                   {"grant_type", "authorization_code"},  
+                   {"client_id", "TPI_GrupoNro5"},                     
+                   {"client_secret","pass12345" },
+                   {"code",code },
+                   {"redirect_uri","http://localhost:54705/home/callBack"}
+               };
+
+                var content = new FormUrlEncodedContent(form);
+
+                HttpResponseMessage Res = client.PostAsync("/openam/oauth2/access_token", content).Result;
+
                 if (Res.IsSuccessStatusCode)
                 {
-                    var AccessTokenResponse = Res.Content.ReadAsStringAsync().Result;
-                    token = JsonConvert.DeserializeObject<AccessToken>((AccessTokenResponse));
+                    var TokenResponse = Res.Content.ReadAsStringAsync().Result;
+                    resultado = JsonConvert.DeserializeObject<AccessToken>((TokenResponse));
 
                 }
 
-                return token;
+                return resultado;
             }
         }
 

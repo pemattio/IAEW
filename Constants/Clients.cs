@@ -14,6 +14,8 @@ namespace Constants
             Secret = "pass12345",
             RedirectUrl = Paths.AuthorizeCodeCallBackPath
         };
+
+       
     }
 
     public class Client

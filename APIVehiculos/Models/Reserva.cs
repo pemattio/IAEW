@@ -17,6 +17,8 @@ namespace APIVehiculos.Models
         public int Id { get; set; }
         public string CodigoReserva { get; set; }
         public string FechaReserva { get; set; }
+        public string FechaHoraRetiro { get; set; }
+        public string FechaHoraDevolucion { get; set; }
         public int IdCliente { get; set; }
         public int IdVendedor { get; set; }
         public decimal Costo { get; set; }

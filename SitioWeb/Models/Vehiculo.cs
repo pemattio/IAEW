@@ -22,6 +22,8 @@ namespace SitioWeb.Models
         
         public double CalculoPrecioAlPublico()
         {
-            return (double)(this.PrecioPorDia * 1.2);        }
+            return (double)(this.PrecioPorDia * 1.2);
+        }
+
     }
 }
