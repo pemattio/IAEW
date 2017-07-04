@@ -1,18 +1,18 @@
 ﻿@model IEnumerable<SitioWeb.Models.Vehiculo>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Vehículos";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <div class=" col-md-3">
-    @Html.DropDownList("Paises", new SelectList(ViewBag.Paises, "Id", "Nombre"), "Seleccione pais", new { @class = "form-control", @onchange = "cargoCiudad(this)" })
+    @Html.DropDownList("Paises", (SelectList)ViewBag.Pais, "Seleccione pais", new { @class = "form-control", @onchange = "cargoCiudad(this)" })
 </div>
-@if (ViewBag.Ciudades != null)
+@if (ViewBag.Ciudad != null)
 {
     <div class=" col-md-3">
-        @Html.DropDownList("Ciudades", new SelectList(ViewBag.Ciudades, "Id", "Nombre"), "Seleccione ciudad", new { @class = "form-control", @onchange = "cargoVehiculo(this)" })
+@Html.DropDownList("Ciudades", (SelectList)ViewBag.Ciudad, "Seleccione ciudad", new { @class = "form-control", @onchange = "cargoVehiculo(this)" })
     </div> 
 }
 @if (Model != null)

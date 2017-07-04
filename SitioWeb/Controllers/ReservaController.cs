@@ -35,7 +35,8 @@ namespace SitioWeb.Controllers
                     client.BaseAddress = new Uri(Baseurl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservas/"+ token.access_token ).Result;
+                    //HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservasTuricor/"+ token.access_token ).Result;
+                    HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservasTuricor/").Result;
                     if (Res.IsSuccessStatusCode)
                     {
                         var ReservaResponse = Res.Content.ReadAsStringAsync().Result;
@@ -46,9 +47,36 @@ namespace SitioWeb.Controllers
                     return View(list);
                 }
             }
-            catch { return RedirectToAction("Index", "Home"); }
+            catch { return RedirectToAction("NoAutorizado", "Home"); }
         }
 
+        public ActionResult Todas()
+        {
+            try
+            {
+
+                List<Reserva> list = new List<Reserva>();
+
+                using (var client = new HttpClient())
+                {
+                    AccessToken token = (AccessToken)Session["token"];
+                    client.BaseAddress = new Uri(Baseurl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservas/"+ token.access_token ).Result;
+                    HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservas/").Result;
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var ReservaResponse = Res.Content.ReadAsStringAsync().Result;
+                        list = JsonConvert.DeserializeObject<List<Reserva>>(ReservaResponse);
+
+                    }
+
+                    return View(list);
+                }
+            }
+            catch { return RedirectToAction("NoAutorizado", "Home"); }
+        }
 
         public ActionResult Cancelar(string id)
         {
@@ -64,7 +92,8 @@ namespace SitioWeb.Controllers
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Reserva/CancelarReserva/" + id+"/"+token.access_token).Result;
+                //HttpResponseMessage Res = client.GetAsync("api/Reserva/CancelarReserva/" + id+"/"+token.access_token).Result;
+                HttpResponseMessage Res = client.GetAsync("api/Reserva/CancelarReserva/" + id).Result;
                 if (Res.IsSuccessStatusCode)
                 {
                     return RedirectToAction("Index", "Reserva");

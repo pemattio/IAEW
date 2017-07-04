@@ -28,16 +28,22 @@ namespace SitioWeb.Controllers
         {
             try
             {
-                ViewBag.Paises = ConsultarPaises();
                 if (idPais != null)
                 {
-                    @ViewBag.paisSelec = idPais;
-                    ViewBag.Ciudades = ConsultarCiudades(idPais);
+                    //@ViewBag.paisSelec = idPais;
+                    ViewBag.Pais = new SelectList(ConsultarPaises(), "Id", "Nombre", idPais);
+                    if (idCiudad != null) { ViewBag.Ciudad = new SelectList(ConsultarCiudades(idPais), "Id", "Nombre", idCiudad); }
+                    else { ViewBag.Ciudad = new SelectList(ConsultarCiudades(idPais), "Id", "Nombre"); }
+                }
+                else
+                {
+                    ViewBag.Pais = new SelectList(ConsultarPaises(), "Id", "Nombre");
                 }
                 if (idCiudad != null)
                 {
                     List<Vehiculo> list = ConsultarVehiculos(idCiudad);
                     Session["vehiculos"] = list;
+                    Session["idPais"] = idPais;
                     return View(list);
                 }
                 else
@@ -45,11 +51,12 @@ namespace SitioWeb.Controllers
                     return View();
                 }
             }
-            catch { return RedirectToAction("Index", "Home"); }
+            catch { 
+                return RedirectToAction("NoAutorizado", "Home"); }
             
         }
 
-        public ActionResult Reservar(int Id) 
+        public ActionResult Reservar(int Id)
         {
             ViewBag.Cliente = ConsultarCliente();
             ViewBag.Vendedor = ConsultarVendedor();
@@ -73,7 +80,11 @@ namespace SitioWeb.Controllers
                 Costo = Convert.ToDecimal(vehiculo.PrecioPorDia),
                 FechaHoraDevolucion=form["FechaHoraDevolucion"],
                 FechaHoraRetiro = form["FechaHoraRetiro"],
-                 PrecioVenta = Convert.ToDecimal(form["CalculoPrecioAlPublico"]),
+                LugarRetiro = form["LugarRetiro"],
+                LugarDevolucion = form["LugarDevolucion"],
+                 PrecioVenta = Convert.ToDecimal(vehiculo.CalculoPrecioAlPublico()),
+                 IdPais = (int)Session["idPais"],
+                 IdCiudad = vehiculo.CiudadId,
                 Id = Convert.ToInt32(form["Id"]),
             };
             if(!GuardarReserva(reserva))
@@ -163,7 +174,8 @@ namespace SitioWeb.Controllers
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises/"+token.access_token ).Result;
+                //HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises/"+token.access_token ).Result;
+                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises/").Result;
                 if (Res.IsSuccessStatusCode)
                 {
                     var PaisResponse = Res.Content.ReadAsStringAsync().Result;

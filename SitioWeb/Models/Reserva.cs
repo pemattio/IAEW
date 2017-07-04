@@ -19,6 +19,8 @@ namespace SitioWeb.Models
         public string FechaReserva { get; set; }
         public string FechaHoraDevolucion { get; set; }
         public string FechaHoraRetiro { get; set; }
+        public string LugarRetiro { get; set; }
+        public string LugarDevolucion { get; set; }
         public int IdCliente { get; set; }
         public int IdVendedor { get; set; }
         public decimal Costo { get; set; }
@@ -26,8 +28,14 @@ namespace SitioWeb.Models
         public int IdVehiculoCiudad { get; set; }
         public int IdCiudad { get; set; }
         public int IdPais { get; set; }
+        public string Estado { get; set; }
+        public string FechaCancelacion { get; set; }
+        public string NroDocumentoCliente { get; set; }
+        public string ApellidoNombreCliente { get; set; }
+        public decimal TotalReserva { get; set; }
     
         public virtual Cliente Cliente { get; set; }
         public virtual Vendedor Vendedor { get; set; }
+
+        }
     }
-}

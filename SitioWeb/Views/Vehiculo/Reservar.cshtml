@@ -70,7 +70,7 @@
             </dd>
 
             <dt>
-                @Html.DisplayNameFor(model => model.TieneAireAcon)
+                @Html.Label("Aire acondicionado")
             </dt>
 
             <dd>
@@ -122,12 +122,25 @@
                     @Html.DropDownList("Vendedores", new SelectList(ViewBag.Vendedor, "Id", "Nombre"), "Seleccione vendedor", new { @class = "form-control" })
                 </div>
     <div class=" col-md-3">
-        Día de devolucion:
-        @Html.TextBox("FechaHoraDevolucion", null, "Ingrese el día", new {@type = "date" })
-    </div>
-    <div class=" col-md-3">
         Dia de Retiro:
         @Html.TextBox("FechaHoraRetiro", null, "Ingrese el día", new { @type = "date" })
+    </div>
+    <div class=" col-md-3">
+        Día de Devolucion:
+        @Html.TextBox("FechaHoraDevolucion", null, "Ingrese el día", new { @type = "date" })
+        @{var selectListLugar = new SelectList(new List<SelectListItem>
+            {
+            new SelectListItem { Text = "Aeropuerto", Value = "Aeropuerto"},
+            new SelectListItem{ Text = "Terminal Buses", Value = "TerminalBuses"},
+            new SelectListItem{ Text = "Hotel", Value = "Hotel"},
+            }, "Value", "Text");
+        }
+    </div>
+    <div class=" col-md-3">
+            @Html.DropDownList("LugarRetiro", selectListLugar, "Seleccione el lugar de retiro", new { @class = "form-control" })
+</div>
+    <div class=" col-md-3">
+        @Html.DropDownList("LugarDevolucion", selectListLugar, "Seleccione el lugar de devolución", new { @class = "form-control" })
     </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">

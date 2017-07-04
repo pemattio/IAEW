@@ -18,19 +18,60 @@ namespace APIVehiculos.Controllers
     {
         private TuricorEntities db = new TuricorEntities();
 
-        [Route("api/Reservas/ListadoDeReservas/{access_token}")]
+        //public IHttpActionResult ListadoDeReservas(string access_token)
+        //[Route("api/Reservas/ListadoDeReservas/{access_token}")]
+        [Route("api/Reservas/ListadoDeReservas/")]
         [HttpGet]
-        public IHttpActionResult ListadoDeReservas(string access_token)
+        public IHttpActionResult ListadoDeReservas()
         {
             try
             {
-                if (Validar(access_token) == true)
+                //if (Validar(access_token) == true)
+                //{
+                var cliente = new WCF.WCFReservaVehiculosClient();
+                ConsultarReservasRequest res = new ConsultarReservasRequest { IncluirCanceladas = false};
+                ConsultarReservasResponse Reservas = cliente.ConsultarReservas(res);
+                List<Reserva> reservas = new List<Reserva>();
+                foreach (ReservaEntity r in Reservas.Reservas)
                 {
-                    var cliente = new WCF.WCFReservaVehiculosClient();
-                    ConsultarReservasRequest res = new ConsultarReservasRequest { IncluirCanceladas = true };
-                    ConsultarReservasResponse Reservas = cliente.ConsultarReservas(res);
-                    return Ok(Reservas.Reservas);
-                } return InternalServerError();
+                    Reserva aux = new Reserva
+                    {
+                        CodigoReserva = r.CodigoReserva,
+                        Estado = estadoReserva(r.Estado),
+                        FechaCancelacion=Convert.ToString(r.FechaCancelacion),
+                        FechaHoraRetiro=Convert.ToString(r.FechaHoraRetiro),
+                        FechaHoraDevolucion=Convert.ToString(r.FechaHoraDevolucion),
+                        FechaReserva=Convert.ToString(r.FechaReserva),
+                        LugarDevolucion=r.LugarDevolucion,
+                        LugarRetiro=r.LugarRetiro,
+                        NroDocumentoCliente=r.NroDocumentoCliente,
+                        TotalReserva=r.TotalReserva,
+                        IdVehiculoCiudad=r.VehiculoPorCiudadId
+                    };
+                    reservas.Add(aux);
+                }
+                return Ok(reservas);
+                //} return Unauthorized();
+
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        //public IHttpActionResult ListadoDeReservasTuricor(string access_token)
+        //[Route("api/Reservas/ListadoDeReservasTuricor/{access_token}")]
+        [Route("api/Reservas/ListadoDeReservasTuricor/")]
+        [HttpGet]
+        public IHttpActionResult ListadoDeReservasTuricor()
+        {
+            try
+            {
+                //if (Validar(access_token) == true)
+                //{
+                return Ok(db.Reserva);
+                //} return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -40,7 +81,7 @@ namespace APIVehiculos.Controllers
 
         [Route("api/Reservas/ListadoDeReservasCanceladas")]
         [HttpGet]
-        public IHttpActionResult ListadoDeReservasCanceladas()
+        public IHttpActionResult ListadoDeReservasNoCanceladas()
         {
 
             try
@@ -56,27 +97,29 @@ namespace APIVehiculos.Controllers
                 return InternalServerError(ex);
             }
         }
-        [Route("api/Reserva/CancelarReserva/{idReserva}/{access_token}")]
+        //[Route("api/Reserva/CancelarReserva/{idReserva}/{access_token}")]
+        [Route("api/Reserva/CancelarReserva/{idReserva}")]
         [HttpGet]
-       
-        public IHttpActionResult cancelarReservas(string idReserva,string access_token)
+
+        //public IHttpActionResult cancelarReservas(string idReserva, string access_token)
+        public IHttpActionResult cancelarReservas(string idReserva)
         {
 
             try
             {
-                if (Validar(access_token) == true)
-                {
-           
+                //if (Validar(access_token) == true)
+                //{
+
                     var cliente = new WCF.WCFReservaVehiculosClient();
-                    CancelarReservaRequest res = new CancelarReservaRequest {CodigoReserva = idReserva };
+                    CancelarReservaRequest res = new CancelarReservaRequest { CodigoReserva = idReserva };
                     CancelarReservaResponse Reservas = cliente.CancelarReserva(res);
-                    if (db.Reserva.Find(idReserva)!=null)
+                    if (db.Reserva.FirstOrDefault(a => a.CodigoReserva == idReserva) != null)
                     {
-                    db.Reserva.Remove(db.Reserva.Single(a => a.CodigoReserva == idReserva));
-                    db.SaveChanges();
-            }
-                }
-        return Ok();
+                        db.Reserva.Remove(db.Reserva.Single(a => a.CodigoReserva == idReserva));
+                        db.SaveChanges();
+                    }
+                //}
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -93,7 +136,7 @@ namespace APIVehiculos.Controllers
             {
                 if (reserva == null)
                     return BadRequest();
-                
+
                 var cliente = new WCF.WCFReservaVehiculosClient();
                 ReservarVehiculoRequest res = new ReservarVehiculoRequest
                 {
@@ -101,10 +144,10 @@ namespace APIVehiculos.Controllers
                     FechaHoraDevolucion = Convert.ToDateTime(reserva.FechaHoraDevolucion),
                     FechaHoraRetiro = Convert.ToDateTime(reserva.FechaHoraRetiro),
                     IdVehiculoCiudad = reserva.IdVehiculoCiudad,
-                    LugarRetiro = lugarRetiroDevolucion("1"),
-                    LugarDevolucion = lugarRetiroDevolucion("1"),
+                    LugarRetiro = lugarRetiroDevolucion(reserva.LugarRetiro),
+                    LugarDevolucion = lugarRetiroDevolucion(reserva.LugarDevolucion),
                     NroDocumentoCliente = db.Cliente.Single(a => a.Id == reserva.IdCliente).NroDocumento,
-                    
+
                 };
                 ReservarVehiculoResponse Reservas = cliente.ReservarVehiculo(res);
                 reserva.CodigoReserva = Reservas.Reserva.CodigoReserva;
@@ -122,14 +165,27 @@ namespace APIVehiculos.Controllers
         {
             switch (lugarRetiroDevolucion)
             {
-                case "0":
+                case "Aeropuerto":
                     return LugarRetiroDevolucion.Aeropuerto;
-                case "1":
+                case "TerminalBuses":
                     return LugarRetiroDevolucion.TerminalBuses;
-                case "2":
+                case "Hotel":
                     return LugarRetiroDevolucion.Hotel;
                 default:
                     return new LugarRetiroDevolucion();
+            }
+        }
+
+        private string estadoReserva(EstadoReservaEnum estadoReserva)
+        {
+            switch (estadoReserva)
+            {
+                case (EstadoReservaEnum.Activa):
+                    return "Activa";
+                case (EstadoReservaEnum.Cancelada):
+                    return "Cancelada";
+                default:
+                    return "";
             }
         }
 

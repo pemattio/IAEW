@@ -21,7 +21,7 @@ namespace SitioWeb.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+                return View();
         }
 
         public ActionResult callBack(string code, string scope, string state)
@@ -72,6 +72,13 @@ namespace SitioWeb.Controllers
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
+
+            return View();
+        }
+
+        public ActionResult NoAutorizado()
+        {
+            ViewBag.Message = "No estás autorizado a ingresar a la página que intentaste acceder. Por favor inicie sesión.";
 
             return View();
         }

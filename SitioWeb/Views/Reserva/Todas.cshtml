@@ -1,0 +1,86 @@
+﻿@model IEnumerable<SitioWeb.Models.Reserva>
+
+@{
+    ViewBag.Title = "Todas";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CodigoReserva)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaHoraRetiro)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaHoraDevolucion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaCancelacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaReserva)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LugarDevolucion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LugarRetiro)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NroDocumentoCliente)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalReserva)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdVehiculoCiudad)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CodigoReserva)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaHoraRetiro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaHoraDevolucion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCancelacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaReserva)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LugarDevolucion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LugarRetiro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NroDocumentoCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalReserva)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdVehiculoCiudad)
+            </td>
+        </tr>
+    }
+
+</table>
+

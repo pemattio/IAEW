@@ -19,18 +19,20 @@ namespace APIVehiculos.Controllers
     {
         private TuricorEntities db = new TuricorEntities();
 
-        [Route("api/Vehiculos/Paises/{access_token}")]
+        //[Route("api/Vehiculos/Paises/{access_token}")]
+        [Route("api/Vehiculos/Paises/")]
         [HttpGet]
-        public IHttpActionResult Paises(string access_token)
+        //public IHttpActionResult Paises(string access_token)
+        public IHttpActionResult Paises()
         {
             try{
-            if (Validar(access_token) == true)
-            {
+            //if (Validar(access_token) == true)
+            //{
             var cliente = new WCF.WCFReservaVehiculosClient();
             ConsultarPaisesResponse Paises = cliente.ConsultarPaises();
            return Ok(Paises.Paises);
-            }
-            return InternalServerError();
+            //}
+            //return Unauthorized();
             }
             catch (Exception ex)
             {
