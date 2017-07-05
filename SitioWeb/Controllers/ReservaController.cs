@@ -54,8 +54,8 @@ namespace SitioWeb.Controllers
                     return View(list);
                 }
             }
-            catch (HttpRequestException hre) { throw hre; }
-            catch (Exception ex){ return RedirectToAction("Error", "Home", ex.Message); }
+            catch (HttpRequestException hre) { return RedirectToAction("Error", "Home", new { mensaje = hre.Message }); }
+            catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
         }
 
         public ActionResult Todas()
@@ -76,7 +76,7 @@ namespace SitioWeb.Controllers
                     client.BaseAddress = new Uri(Baseurl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservas/"+ token.access_token ).Result;
+                    HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservas/" + token.access_token).Result;
                     if (Res.IsSuccessStatusCode)
                     {
                         var ReservaResponse = Res.Content.ReadAsStringAsync().Result;
@@ -90,8 +90,8 @@ namespace SitioWeb.Controllers
                     return View(list);
                 }
             }
-            catch (HttpRequestException hre) { throw hre; }
-            catch (Exception ex){ return RedirectToAction("Error", "Home", ex.Message); }
+            catch (HttpRequestException hre) { return RedirectToAction("Error", "Home", new { mensaje = hre.Message }); }
+            catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
         }
 
         public ActionResult Cancelar(string id)
