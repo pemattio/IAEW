@@ -165,25 +165,32 @@ namespace SitioWeb.Controllers
         public List<Pais> ConsultarPaises() 
         {
 
-            List<Pais> list = new List<Pais>();
-            
-            using (var client = new HttpClient())
-            {
-                AccessToken token = (AccessToken)Session["token"];
-               
-                client.BaseAddress = new Uri(Baseurl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises/"+token.access_token ).Result;
-                if (Res.IsSuccessStatusCode)
-                {
-                    var PaisResponse = Res.Content.ReadAsStringAsync().Result;
-                    list = JsonConvert.DeserializeObject<List<Pais>>((PaisResponse));
-                    
-                }
+            //try
+            //{
+                List<Pais> list = new List<Pais>();
 
-                return list;
-            }
+                using (var client = new HttpClient())
+                {
+                    AccessToken token = (AccessToken)Session["token"];
+
+                    client.BaseAddress = new Uri(Baseurl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises/" + token.access_token).Result;
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var PaisResponse = Res.Content.ReadAsStringAsync().Result;
+                        list = JsonConvert.DeserializeObject<List<Pais>>((PaisResponse));
+
+                    }
+
+                    return list;
+                }
+            //}
+            //catch (Exception ex)
+            //{
+
+            //}
         }
         public List<Ciudad> ConsultarCiudades(int? idPais)
         {
