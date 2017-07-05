@@ -174,8 +174,7 @@ namespace SitioWeb.Controllers
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                //HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises/"+token.access_token ).Result;
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises/").Result;
+                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Paises/"+token.access_token ).Result;
                 if (Res.IsSuccessStatusCode)
                 {
                     var PaisResponse = Res.Content.ReadAsStringAsync().Result;

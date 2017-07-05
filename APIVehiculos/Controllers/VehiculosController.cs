@@ -19,20 +19,18 @@ namespace APIVehiculos.Controllers
     {
         private TuricorEntities db = new TuricorEntities();
 
-        //[Route("api/Vehiculos/Paises/{access_token}")]
-        [Route("api/Vehiculos/Paises/")]
+        [Route("api/Vehiculos/Paises/{access_token}")]
         [HttpGet]
-        //public IHttpActionResult Paises(string access_token)
-        public IHttpActionResult Paises()
+        public IHttpActionResult Paises(string access_token)
         {
             try{
-            //if (Validar(access_token) == true)
-            //{
+            if (Validar(access_token) == true)
+            {
             var cliente = new WCF.WCFReservaVehiculosClient();
             ConsultarPaisesResponse Paises = cliente.ConsultarPaises();
            return Ok(Paises.Paises);
-            //}
-            //return Unauthorized();
+            }
+            return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -105,7 +103,7 @@ namespace APIVehiculos.Controllers
             using (var client = new HttpClient())
             {
 
-                client.BaseAddress = new Uri("http://104.197.29.243:8080");
+                client.BaseAddress = new Uri("http://130.211.183.120:8080");
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

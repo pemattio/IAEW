@@ -18,16 +18,14 @@ namespace APIVehiculos.Controllers
     {
         private TuricorEntities db = new TuricorEntities();
 
-        //public IHttpActionResult ListadoDeReservas(string access_token)
-        //[Route("api/Reservas/ListadoDeReservas/{access_token}")]
-        [Route("api/Reservas/ListadoDeReservas/")]
+        [Route("api/Reservas/ListadoDeReservas/{access_token}")]
         [HttpGet]
-        public IHttpActionResult ListadoDeReservas()
+        public IHttpActionResult ListadoDeReservas(string access_token)
         {
             try
             {
-                //if (Validar(access_token) == true)
-                //{
+                if (Validar(access_token) == true)
+                {
                 var cliente = new WCF.WCFReservaVehiculosClient();
                 ConsultarReservasRequest res = new ConsultarReservasRequest { IncluirCanceladas = false};
                 ConsultarReservasResponse Reservas = cliente.ConsultarReservas(res);
@@ -51,7 +49,7 @@ namespace APIVehiculos.Controllers
                     reservas.Add(aux);
                 }
                 return Ok(reservas);
-                //} return Unauthorized();
+                } return Unauthorized();
 
             }
             catch (Exception ex)
@@ -60,18 +58,16 @@ namespace APIVehiculos.Controllers
             }
         }
 
-        //public IHttpActionResult ListadoDeReservasTuricor(string access_token)
-        //[Route("api/Reservas/ListadoDeReservasTuricor/{access_token}")]
-        [Route("api/Reservas/ListadoDeReservasTuricor/")]
+        [Route("api/Reservas/ListadoDeReservasTuricor/{access_token}")]
         [HttpGet]
-        public IHttpActionResult ListadoDeReservasTuricor()
+        public IHttpActionResult ListadoDeReservasTuricor(string access_token)
         {
             try
             {
-                //if (Validar(access_token) == true)
-                //{
+                if (Validar(access_token) == true)
+                {
                 return Ok(db.Reserva);
-                //} return Unauthorized();
+                } return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -97,18 +93,16 @@ namespace APIVehiculos.Controllers
                 return InternalServerError(ex);
             }
         }
-        //[Route("api/Reserva/CancelarReserva/{idReserva}/{access_token}")]
-        [Route("api/Reserva/CancelarReserva/{idReserva}")]
+        [Route("api/Reserva/CancelarReserva/{idReserva}/{access_token}")]
         [HttpGet]
 
-        //public IHttpActionResult cancelarReservas(string idReserva, string access_token)
-        public IHttpActionResult cancelarReservas(string idReserva)
+        public IHttpActionResult cancelarReservas(string idReserva, string access_token)
         {
 
             try
             {
-                //if (Validar(access_token) == true)
-                //{
+                if (Validar(access_token) == true)
+                {
 
                     var cliente = new WCF.WCFReservaVehiculosClient();
                     CancelarReservaRequest res = new CancelarReservaRequest { CodigoReserva = idReserva };
@@ -118,7 +112,7 @@ namespace APIVehiculos.Controllers
                         db.Reserva.Remove(db.Reserva.Single(a => a.CodigoReserva == idReserva));
                         db.SaveChanges();
                     }
-                //}
+                }
                 return Ok();
             }
             catch (Exception ex)
@@ -195,7 +189,7 @@ namespace APIVehiculos.Controllers
             using (var client = new HttpClient())
             {
 
-                client.BaseAddress = new Uri("http://104.197.29.243:8080");
+                client.BaseAddress = new Uri("http://130.211.183.120:8080");
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

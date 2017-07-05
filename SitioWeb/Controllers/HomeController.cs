@@ -36,7 +36,7 @@ namespace SitioWeb.Controllers
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://104.197.29.243:8080");
+                client.BaseAddress = new Uri("http://130.211.183.120:8080");
 
                 var form = new Dictionary<string, string>  
                {  
