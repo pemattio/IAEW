@@ -125,6 +125,7 @@
     <Content Include="Models\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
+    <Content Include="packages.config" />
     <None Include="Service References\WCF\configuration91.svcinfo" />
     <None Include="Service References\WCF\configuration.svcinfo" />
     <None Include="Service References\WCF\Reference.svcmap">
@@ -175,7 +176,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
     <None Include="Service References\WCF\WCFReservaVehiculos.wsdl" />
     <None Include="Service References\WCF\WCFReservaVehiculos.xsd">
       <SubType>Designer</SubType>
