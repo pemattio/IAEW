@@ -76,9 +76,9 @@ namespace SitioWeb.Controllers
             return View();
         }
 
-        public ActionResult NoAutorizado()
+        public ActionResult Error(string mensaje)
         {
-            ViewBag.Message = "No estás autorizado a ingresar a la página que intentaste acceder. Por favor inicie sesión.";
+            ViewBag.Message = mensaje;
 
             return View();
         }

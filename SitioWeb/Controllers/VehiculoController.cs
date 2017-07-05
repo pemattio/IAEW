@@ -51,9 +51,8 @@ namespace SitioWeb.Controllers
                     return View();
                 }
             }
-            catch { 
-                return RedirectToAction("NoAutorizado", "Home"); }
-            
+            catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
+
         }
 
         public ActionResult Reservar(int Id)
@@ -61,7 +60,7 @@ namespace SitioWeb.Controllers
             ViewBag.Cliente = ConsultarCliente();
             ViewBag.Vendedor = ConsultarVendedor();
             List<Vehiculo> list = (List<Vehiculo>)Session["vehiculos"];
-            Vehiculo vehiculo = list.Single(a => a.Id ==Id);
+            Vehiculo vehiculo = list.Single(a => a.Id == Id);
             return View(vehiculo);
         }
 
@@ -72,22 +71,22 @@ namespace SitioWeb.Controllers
             List<Vehiculo> list = (List<Vehiculo>)Session["vehiculos"];
             Vehiculo vehiculo = list.Single(a => a.Id == Convert.ToInt32(form["Id"]));
             Reserva reserva = new Reserva
-            { 
+            {
                 IdCliente = Convert.ToInt32(form["Clientes"]),
                 IdVendedor = Convert.ToInt32(form["Vendedores"]),
                 IdVehiculoCiudad = vehiculo.VehiculoCiudadId,
-                 FechaReserva= DateTime.Now.ToString(),
+                FechaReserva = DateTime.Now.ToString(),
                 Costo = Convert.ToDecimal(vehiculo.PrecioPorDia),
-                FechaHoraDevolucion=form["FechaHoraDevolucion"],
+                FechaHoraDevolucion = form["FechaHoraDevolucion"],
                 FechaHoraRetiro = form["FechaHoraRetiro"],
                 LugarRetiro = form["LugarRetiro"],
                 LugarDevolucion = form["LugarDevolucion"],
-                 PrecioVenta = Convert.ToDecimal(vehiculo.CalculoPrecioAlPublico()),
-                 IdPais = (int)Session["idPais"],
-                 IdCiudad = vehiculo.CiudadId,
+                PrecioVenta = Convert.ToDecimal(vehiculo.CalculoPrecioAlPublico()),
+                IdPais = (int)Session["idPais"],
+                IdCiudad = vehiculo.CiudadId,
                 Id = Convert.ToInt32(form["Id"]),
             };
-            if(!GuardarReserva(reserva))
+            if (!GuardarReserva(reserva))
             {
                 return View();
             }
@@ -97,25 +96,25 @@ namespace SitioWeb.Controllers
 
         private Boolean GuardarReserva(Reserva reserva)
         {
-                var jsonRequest = JsonConvert.SerializeObject(reserva);
+            var jsonRequest = JsonConvert.SerializeObject(reserva);
 
-                var httpContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+            var httpContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-                var cliente = new HttpClient()
-                {
-                    BaseAddress = new Uri(Baseurl)
-                };
+            var cliente = new HttpClient()
+            {
+                BaseAddress = new Uri(Baseurl)
+            };
 
-                var url = "api/Reservas/ReservarVehiculo";
+            var url = "api/Reservas/ReservarVehiculo";
 
-                var res = cliente.PostAsync(url, httpContent).Result;
+            var res = cliente.PostAsync(url, httpContent).Result;
 
-                if (!res.IsSuccessStatusCode)
-                {
-                    return false;
+            if (!res.IsSuccessStatusCode)
+            {
+                return false;
 
-                }
-                return true;
+            }
+            return true;
         }
 
         private List<Vendedor> ConsultarVendedor()
@@ -162,17 +161,19 @@ namespace SitioWeb.Controllers
             }
         }
 
-        public List<Pais> ConsultarPaises() 
+        public List<Pais> ConsultarPaises()
         {
-
-            //try
-            //{
-                List<Pais> list = new List<Pais>();
-
-                using (var client = new HttpClient())
+            List<Pais> list = new List<Pais>();
+            using (var client = new HttpClient())
+            {
+                try
                 {
                     AccessToken token = (AccessToken)Session["token"];
-
+                    if (token == null)
+                    {
+                        token = new AccessToken();
+                        token.access_token = "noAutorizado";
+                    }
                     client.BaseAddress = new Uri(Baseurl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -181,17 +182,18 @@ namespace SitioWeb.Controllers
                     {
                         var PaisResponse = Res.Content.ReadAsStringAsync().Result;
                         list = JsonConvert.DeserializeObject<List<Pais>>((PaisResponse));
-
                     }
-
+                    else
+                    {
+                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                    }
                     return list;
                 }
-            //}
-            //catch (Exception ex)
-            //{
-
-            //}
+                catch (HttpRequestException hre){throw hre;}
+                catch (Exception ex){throw ex;}
+            }
         }
+
         public List<Ciudad> ConsultarCiudades(int? idPais)
         {
 
@@ -199,11 +201,11 @@ namespace SitioWeb.Controllers
 
             using (var client = new HttpClient())
             {
-               
+
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Ciudades/"+idPais).Result;
+                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Ciudades/" + idPais).Result;
                 if (Res.IsSuccessStatusCode)
                 {
                     var CiudadResponse = Res.Content.ReadAsStringAsync().Result;
@@ -224,7 +226,7 @@ namespace SitioWeb.Controllers
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/VehiculosDisponibles/"+idCiudad).Result;
+                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/VehiculosDisponibles/" + idCiudad).Result;
                 if (Res.IsSuccessStatusCode)
                 {
                     var VehiculosResponse = Res.Content.ReadAsStringAsync().Result;

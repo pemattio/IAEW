@@ -26,34 +26,35 @@ namespace APIVehiculos.Controllers
             {
                 if (Validar(access_token) == true)
                 {
-                var cliente = new WCF.WCFReservaVehiculosClient();
-                ConsultarReservasRequest res = new ConsultarReservasRequest { IncluirCanceladas = false};
-                ConsultarReservasResponse Reservas = cliente.ConsultarReservas(res);
-                List<Reserva> reservas = new List<Reserva>();
-                foreach (ReservaEntity r in Reservas.Reservas)
-                {
-                    Reserva aux = new Reserva
+                    var cliente = new WCF.WCFReservaVehiculosClient();
+                    ConsultarReservasRequest res = new ConsultarReservasRequest { IncluirCanceladas = false };
+                    ConsultarReservasResponse Reservas = cliente.ConsultarReservas(res);
+                    List<Reserva> reservas = new List<Reserva>();
+                    foreach (ReservaEntity r in Reservas.Reservas)
                     {
-                        CodigoReserva = r.CodigoReserva,
-                        Estado = estadoReserva(r.Estado),
-                        FechaCancelacion=Convert.ToString(r.FechaCancelacion),
-                        FechaHoraRetiro=Convert.ToString(r.FechaHoraRetiro),
-                        FechaHoraDevolucion=Convert.ToString(r.FechaHoraDevolucion),
-                        FechaReserva=Convert.ToString(r.FechaReserva),
-                        LugarDevolucion=r.LugarDevolucion,
-                        LugarRetiro=r.LugarRetiro,
-                        NroDocumentoCliente=r.NroDocumentoCliente,
-                        TotalReserva=r.TotalReserva,
-                        IdVehiculoCiudad=r.VehiculoPorCiudadId
-                    };
-                    reservas.Add(aux);
-                }
-                return Ok(reservas);
+                        Reserva aux = new Reserva
+                        {
+                            CodigoReserva = r.CodigoReserva,
+                            Estado = estadoReserva(r.Estado),
+                            FechaCancelacion = Convert.ToString(r.FechaCancelacion),
+                            FechaHoraRetiro = Convert.ToString(r.FechaHoraRetiro),
+                            FechaHoraDevolucion = Convert.ToString(r.FechaHoraDevolucion),
+                            FechaReserva = Convert.ToString(r.FechaReserva),
+                            LugarDevolucion = r.LugarDevolucion,
+                            LugarRetiro = r.LugarRetiro,
+                            NroDocumentoCliente = r.NroDocumentoCliente,
+                            TotalReserva = r.TotalReserva,
+                            IdVehiculoCiudad = r.VehiculoPorCiudadId
+                        };
+                        reservas.Add(aux);
+                    }
+                    return Ok(reservas);
                 } return Unauthorized();
 
             }
             catch (Exception ex)
             {
+                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
                 return InternalServerError(ex);
             }
         }
@@ -66,7 +67,7 @@ namespace APIVehiculos.Controllers
             {
                 if (Validar(access_token) == true)
                 {
-                return Ok(db.Reserva);
+                    return Ok(db.Reserva);
                 } return Unauthorized();
             }
             catch (Exception ex)
@@ -112,12 +113,18 @@ namespace APIVehiculos.Controllers
                         db.Reserva.Remove(db.Reserva.Single(a => a.CodigoReserva == idReserva));
                         db.SaveChanges();
                     }
-                }
-                return Ok();
+                    return Ok();
+                } return Unauthorized();
+
+            }
+            catch (System.ServiceModel.FaultException ex)
+            {
+                ex = new System.ServiceModel.FaultException(FaultExceptions.FaultException41.ToString());
+                return InternalServerError(ex);
             }
             catch (Exception ex)
             {
-                ex = new FaultException("Error 41: La reserva que se desea cancelar no existe.");
+                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
                 return InternalServerError(ex);
             }
         }
@@ -149,8 +156,14 @@ namespace APIVehiculos.Controllers
                 db.SaveChanges();
                 return Ok();
             }
+            catch (System.ServiceModel.FaultException ex)
+            {
+                ex = new System.ServiceModel.FaultException(FaultExceptions.FaultException21.ToString());
+                return InternalServerError(ex);
+            }
             catch (Exception ex)
             {
+                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
                 return InternalServerError(ex);
             }
         }

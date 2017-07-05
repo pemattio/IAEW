@@ -32,6 +32,11 @@ namespace SitioWeb.Controllers
                 using (var client = new HttpClient())
                 {
                     AccessToken token = (AccessToken)Session["token"];
+                    if (token == null)
+                    {
+                        token = new AccessToken();
+                        token.access_token = "noAutorizado";
+                    }
                     client.BaseAddress = new Uri(Baseurl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -42,11 +47,15 @@ namespace SitioWeb.Controllers
                         list = JsonConvert.DeserializeObject<List<Reserva>>(ReservaResponse);
 
                     }
-
+                    else
+                    {
+                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                    }
                     return View(list);
                 }
             }
-            catch { return RedirectToAction("NoAutorizado", "Home"); }
+            catch (HttpRequestException hre) { throw hre; }
+            catch (Exception ex){ return RedirectToAction("Error", "Home", ex.Message); }
         }
 
         public ActionResult Todas()
@@ -59,6 +68,11 @@ namespace SitioWeb.Controllers
                 using (var client = new HttpClient())
                 {
                     AccessToken token = (AccessToken)Session["token"];
+                    if (token == null)
+                    {
+                        token = new AccessToken();
+                        token.access_token = "noAutorizado";
+                    }
                     client.BaseAddress = new Uri(Baseurl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -69,11 +83,15 @@ namespace SitioWeb.Controllers
                         list = JsonConvert.DeserializeObject<List<Reserva>>(ReservaResponse);
 
                     }
-
+                    else
+                    {
+                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                    }
                     return View(list);
                 }
             }
-            catch { return RedirectToAction("NoAutorizado", "Home"); }
+            catch (HttpRequestException hre) { throw hre; }
+            catch (Exception ex){ return RedirectToAction("Error", "Home", ex.Message); }
         }
 
         public ActionResult Cancelar(string id)

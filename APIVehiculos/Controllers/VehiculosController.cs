@@ -14,7 +14,7 @@ using APIVehiculos.Models;
 
 namespace APIVehiculos.Controllers
 {
-   
+
     public class VehiculosController : ApiController
     {
         private TuricorEntities db = new TuricorEntities();
@@ -23,51 +23,66 @@ namespace APIVehiculos.Controllers
         [HttpGet]
         public IHttpActionResult Paises(string access_token)
         {
-            try{
-            if (Validar(access_token) == true)
+            try
             {
-            var cliente = new WCF.WCFReservaVehiculosClient();
-            ConsultarPaisesResponse Paises = cliente.ConsultarPaises();
-           return Ok(Paises.Paises);
+                if (Validar(access_token) == true)
+                {
+                    var cliente = new WCF.WCFReservaVehiculosClient();
+                    ConsultarPaisesResponse Paises = cliente.ConsultarPaises();
+                    return Ok(Paises.Paises);
+                }
+                return Unauthorized();
             }
-            return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            } 
+            catch (System.ServiceModel.FaultException ex) {
+                ex = new System.ServiceModel.FaultException(FaultExceptions.FaultException61.ToString());
+                return InternalServerError(ex); }
+            catch (Exception ex){
+                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
+                return InternalServerError(ex);} 
         }
-               
+
         [Route("api/Vehiculos/Ciudades/{IdPais}")]
         [HttpGet]
         public IHttpActionResult Ciudades(int IdPais)
         {
-            try { 
-            var cliente = new WCF.WCFReservaVehiculosClient();
-            var pais = new ConsultarCiudadesRequest { IdPais=IdPais }; 
-            ConsultarCiudadesResponse Ciudad = cliente.ConsultarCiudades(pais);
-            return Ok(Ciudad.Ciudades);
+            try
+            {
+                var cliente = new WCF.WCFReservaVehiculosClient();
+                var pais = new ConsultarCiudadesRequest { IdPais = IdPais };
+                ConsultarCiudadesResponse Ciudad = cliente.ConsultarCiudades(pais);
+                return Ok(Ciudad.Ciudades);
             }
+            catch (System.ServiceModel.FaultException ex) {
+                ex = new System.ServiceModel.FaultException(FaultExceptions.FaultException51.ToString());
+                return InternalServerError(ex); }
             catch (Exception ex)
             {
+                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
                 return InternalServerError(ex);
-            } 
+            }
         }
 
         [Route("api/Vehiculos/VehiculosDisponibles/{IdCiudad}")]
         [HttpGet]
         public IHttpActionResult VehiculosDisponibles(int IdCiudad)
         {
-            try { 
-            var cliente = new WCF.WCFReservaVehiculosClient();
-            var Ciudad =  new ConsultarVehiculosRequest { IdCiudad = IdCiudad};
-            ConsultarVehiculosDisponiblesResponse VehiculosDisponibles = cliente.ConsultarVehiculosDisponibles(Ciudad);
-            return Ok(VehiculosDisponibles.VehiculosEncontrados);
+            try
+            {
+                var cliente = new WCF.WCFReservaVehiculosClient();
+                var Ciudad = new ConsultarVehiculosRequest { IdCiudad = IdCiudad };
+                ConsultarVehiculosDisponiblesResponse VehiculosDisponibles = cliente.ConsultarVehiculosDisponibles(Ciudad);
+                return Ok(VehiculosDisponibles.VehiculosEncontrados);
+            }
+            catch (System.ServiceModel.FaultException ex)
+            {
+                ex = new System.ServiceModel.FaultException(FaultExceptions.FaultException1.ToString());
+                return InternalServerError(ex);
             }
             catch (Exception ex)
             {
+                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
                 return InternalServerError(ex);
-            } 
+            }
         }
 
         [Route("api/Vehiculos/Cliente")]
@@ -80,6 +95,7 @@ namespace APIVehiculos.Controllers
             }
             catch (Exception ex)
             {
+                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
                 return InternalServerError(ex);
             }
         }
@@ -93,11 +109,12 @@ namespace APIVehiculos.Controllers
             }
             catch (Exception ex)
             {
+                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
                 return InternalServerError(ex);
             }
         }
 
- private Boolean Validar(string token)
+        private Boolean Validar(string token)
         {
             TokenInfo resultado = new TokenInfo();
             using (var client = new HttpClient())
@@ -115,7 +132,7 @@ namespace APIVehiculos.Controllers
 
                 }
                 if (token == resultado.access_token) { return true; } else { return false; }
-               
+
             }
         }
     }
