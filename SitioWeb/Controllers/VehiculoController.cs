@@ -57,41 +57,49 @@ namespace SitioWeb.Controllers
 
         public ActionResult Reservar(int Id)
         {
-            ViewBag.Cliente = ConsultarCliente();
-            ViewBag.Vendedor = ConsultarVendedor();
-            List<Vehiculo> list = (List<Vehiculo>)Session["vehiculos"];
-            Vehiculo vehiculo = list.Single(a => a.Id == Id);
-            return View(vehiculo);
+            try
+            {
+                ViewBag.Cliente = ConsultarCliente();
+                ViewBag.Vendedor = ConsultarVendedor();
+                List<Vehiculo> list = (List<Vehiculo>)Session["vehiculos"];
+                Vehiculo vehiculo = list.Single(a => a.Id == Id);
+                return View(vehiculo);
+            }
+            catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CrearReserva(FormCollection form)
         {
-            List<Vehiculo> list = (List<Vehiculo>)Session["vehiculos"];
-            Vehiculo vehiculo = list.Single(a => a.Id == Convert.ToInt32(form["Id"]));
-            Reserva reserva = new Reserva
+            try
             {
-                IdCliente = Convert.ToInt32(form["Clientes"]),
-                IdVendedor = Convert.ToInt32(form["Vendedores"]),
-                IdVehiculoCiudad = vehiculo.VehiculoCiudadId,
-                FechaReserva = DateTime.Now.ToString(),
-                Costo = Convert.ToDecimal(vehiculo.PrecioPorDia),
-                FechaHoraDevolucion = form["FechaHoraDevolucion"],
-                FechaHoraRetiro = form["FechaHoraRetiro"],
-                LugarRetiro = form["LugarRetiro"],
-                LugarDevolucion = form["LugarDevolucion"],
-                PrecioVenta = Convert.ToDecimal(vehiculo.CalculoPrecioAlPublico()),
-                IdPais = (int)Session["idPais"],
-                IdCiudad = vehiculo.CiudadId,
-                Id = Convert.ToInt32(form["Id"]),
-            };
-            if (!GuardarReserva(reserva))
-            {
-                return View();
+                List<Vehiculo> list = (List<Vehiculo>)Session["vehiculos"];
+                Vehiculo vehiculo = list.Single(a => a.Id == Convert.ToInt32(form["Id"]));
+                Reserva reserva = new Reserva
+                {
+                    IdCliente = Convert.ToInt32(form["Clientes"]),
+                    IdVendedor = Convert.ToInt32(form["Vendedores"]),
+                    IdVehiculoCiudad = vehiculo.VehiculoCiudadId,
+                    FechaReserva = DateTime.Now.ToString(),
+                    Costo = Convert.ToDecimal(vehiculo.PrecioPorDia),
+                    FechaHoraDevolucion = form["FechaHoraDevolucion"],
+                    FechaHoraRetiro = form["FechaHoraRetiro"],
+                    LugarRetiro = form["LugarRetiro"],
+                    LugarDevolucion = form["LugarDevolucion"],
+                    PrecioVenta = Convert.ToDecimal(vehiculo.CalculoPrecioAlPublico()),
+                    IdPais = (int)Session["idPais"],
+                    IdCiudad = vehiculo.CiudadId,
+                    Id = Convert.ToInt32(form["Id"]),
+                };
+                if (!GuardarReserva(reserva))
+                {
+                    //return RedirectToAction("Reservar", new { Id = Convert.ToInt32(form["Id"]) });
+                    return View();
+                }
+                return RedirectToAction("Index", "Reserva"); ;
             }
-            return RedirectToAction("Index", "Reserva"); ;
-
+            catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
         }
 
         private Boolean GuardarReserva(Reserva reserva)
@@ -104,17 +112,26 @@ namespace SitioWeb.Controllers
             {
                 BaseAddress = new Uri(Baseurl)
             };
-
-            var url = "api/Reservas/ReservarVehiculo";
-
-            var res = cliente.PostAsync(url, httpContent).Result;
-
-            if (!res.IsSuccessStatusCode)
+            try
             {
-                return false;
+                AccessToken token = (AccessToken)Session["token"];
+                if (token == null)
+                {
+                    token = new AccessToken();
+                    token.access_token = "noAutorizado";
+                }
+                var url = "api/Reservas/ReservarVehiculo/" + token.access_token;
 
+                var res = cliente.PostAsync(url, httpContent).Result;
+
+                if (!res.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException("Código: " + (int)res.StatusCode + ". Descripción: " + res.ReasonPhrase);
+                }
+                return true;
             }
-            return true;
+            catch (HttpRequestException hre) { throw hre; }
+            catch (Exception ex) { throw ex; }
         }
 
         private List<Vendedor> ConsultarVendedor()
@@ -123,19 +140,32 @@ namespace SitioWeb.Controllers
 
             using (var client = new HttpClient())
             {
-
-                client.BaseAddress = new Uri(Baseurl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Vendedor").Result;
-                if (Res.IsSuccessStatusCode)
+                try
                 {
-                    var VendedorResponse = Res.Content.ReadAsStringAsync().Result;
-                    list = JsonConvert.DeserializeObject<List<Vendedor>>((VendedorResponse));
+                    AccessToken token = (AccessToken)Session["token"];
+                    if (token == null)
+                    {
+                        token = new AccessToken();
+                        token.access_token = "noAutorizado";
+                    }
+                    client.BaseAddress = new Uri(Baseurl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Vendedor/" + token.access_token).Result;
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var VendedorResponse = Res.Content.ReadAsStringAsync().Result;
+                        list = JsonConvert.DeserializeObject<List<Vendedor>>((VendedorResponse));
 
+                    }
+                    else
+                    {
+                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                    }
+                    return list;
                 }
-
-                return list;
+                catch (HttpRequestException hre) { throw hre; }
+                catch (Exception ex) { throw ex; }
             }
         }
 
@@ -145,19 +175,32 @@ namespace SitioWeb.Controllers
 
             using (var client = new HttpClient())
             {
-
-                client.BaseAddress = new Uri(Baseurl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Cliente").Result;
-                if (Res.IsSuccessStatusCode)
+                try
                 {
-                    var ClienteResponse = Res.Content.ReadAsStringAsync().Result;
-                    list = JsonConvert.DeserializeObject<List<Cliente>>((ClienteResponse));
+                    AccessToken token = (AccessToken)Session["token"];
+                    if (token == null)
+                    {
+                        token = new AccessToken();
+                        token.access_token = "noAutorizado";
+                    }
+                    client.BaseAddress = new Uri(Baseurl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Cliente/" + token.access_token).Result;
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var ClienteResponse = Res.Content.ReadAsStringAsync().Result;
+                        list = JsonConvert.DeserializeObject<List<Cliente>>((ClienteResponse));
 
+                    }
+                    else
+                    {
+                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                    }
+                    return list;
                 }
-
-                return list;
+                catch (HttpRequestException hre) { throw hre; }
+                catch (Exception ex) { throw ex; }
             }
         }
 
@@ -189,8 +232,8 @@ namespace SitioWeb.Controllers
                     }
                     return list;
                 }
-                catch (HttpRequestException hre){throw hre;}
-                catch (Exception ex){throw ex;}
+                catch (HttpRequestException hre) { throw hre; }
+                catch (Exception ex) { throw ex; }
             }
         }
 
@@ -201,19 +244,31 @@ namespace SitioWeb.Controllers
 
             using (var client = new HttpClient())
             {
-
-                client.BaseAddress = new Uri(Baseurl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Ciudades/" + idPais).Result;
-                if (Res.IsSuccessStatusCode)
+                try
                 {
-                    var CiudadResponse = Res.Content.ReadAsStringAsync().Result;
-                    list = JsonConvert.DeserializeObject<List<Ciudad>>((CiudadResponse));
-
+                    AccessToken token = (AccessToken)Session["token"];
+                    if (token == null)
+                    {
+                        token = new AccessToken();
+                        token.access_token = "noAutorizado";
+                    }
+                    client.BaseAddress = new Uri(Baseurl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = client.GetAsync("api/Vehiculos/Ciudades/" + idPais + "/" + token.access_token).Result;
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var CiudadResponse = Res.Content.ReadAsStringAsync().Result;
+                        list = JsonConvert.DeserializeObject<List<Ciudad>>((CiudadResponse));
+                    }
+                    else
+                    {
+                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                    }
+                    return list;
                 }
-
-                return list;
+                catch (HttpRequestException hre) { throw hre; }
+                catch (Exception ex) { throw ex; }
             }
         }
         public List<Vehiculo> ConsultarVehiculos(int? idCiudad)
@@ -223,18 +278,32 @@ namespace SitioWeb.Controllers
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(Baseurl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Vehiculos/VehiculosDisponibles/" + idCiudad).Result;
-                if (Res.IsSuccessStatusCode)
+                try
                 {
-                    var VehiculosResponse = Res.Content.ReadAsStringAsync().Result;
-                    list = JsonConvert.DeserializeObject<List<Vehiculo>>((VehiculosResponse));
+                    AccessToken token = (AccessToken)Session["token"];
+                    if (token == null)
+                    {
+                        token = new AccessToken();
+                        token.access_token = "noAutorizado";
+                    }
+                    client.BaseAddress = new Uri(Baseurl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = client.GetAsync("api/Vehiculos/VehiculosDisponibles/" + idCiudad + "/" + token.access_token).Result;
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        var VehiculosResponse = Res.Content.ReadAsStringAsync().Result;
+                        list = JsonConvert.DeserializeObject<List<Vehiculo>>((VehiculosResponse));
+                    }
+                    else
+                    {
+                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                    }
 
+                    return list;
                 }
-
-                return list;
+                catch (HttpRequestException hre) { throw hre; }
+                catch (Exception ex) { throw ex; }
             }
         }
 

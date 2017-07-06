@@ -76,17 +76,21 @@ namespace APIVehiculos.Controllers
             }
         }
 
-        [Route("api/Reservas/ListadoDeReservasCanceladas")]
+        [Route("api/Reservas/ListadoDeReservasCanceladas/{access_token}")]
         [HttpGet]
-        public IHttpActionResult ListadoDeReservasNoCanceladas()
+        public IHttpActionResult ListadoDeReservasNoCanceladas(string access_token)
         {
 
             try
             {
-                var cliente = new WCF.WCFReservaVehiculosClient();
-                ConsultarReservasRequest res = new ConsultarReservasRequest { IncluirCanceladas = true };
-                ConsultarReservasResponse Reservas = cliente.ConsultarReservas(res);
-                return Ok(Reservas.Reservas);
+                if (Validar(access_token) == true)
+                {
+                    var cliente = new WCF.WCFReservaVehiculosClient();
+                    ConsultarReservasRequest res = new ConsultarReservasRequest { IncluirCanceladas = true };
+                    ConsultarReservasResponse Reservas = cliente.ConsultarReservas(res);
+                    return Ok(Reservas.Reservas);
+                }
+                return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -129,32 +133,36 @@ namespace APIVehiculos.Controllers
             }
         }
 
-        [Route("api/Reservas/ReservarVehiculo")]
+        [Route("api/Reservas/ReservarVehiculo/{access_token}")]
         [HttpPost]
-        public IHttpActionResult ReservarVehiculo(Reserva reserva)
+        public IHttpActionResult ReservarVehiculo(Reserva reserva, string access_token)
         {
             try
             {
-                if (reserva == null)
-                    return BadRequest();
-
-                var cliente = new WCF.WCFReservaVehiculosClient();
-                ReservarVehiculoRequest res = new ReservarVehiculoRequest
+                if (Validar(access_token) == true)
                 {
-                    ApellidoNombreCliente = db.Cliente.Single(a => a.Id == reserva.IdCliente).Apellido + " " + db.Cliente.Single(a => a.Id == reserva.IdCliente).Nombre,
-                    FechaHoraDevolucion = Convert.ToDateTime(reserva.FechaHoraDevolucion),
-                    FechaHoraRetiro = Convert.ToDateTime(reserva.FechaHoraRetiro),
-                    IdVehiculoCiudad = reserva.IdVehiculoCiudad,
-                    LugarRetiro = lugarRetiroDevolucion(reserva.LugarRetiro),
-                    LugarDevolucion = lugarRetiroDevolucion(reserva.LugarDevolucion),
-                    NroDocumentoCliente = db.Cliente.Single(a => a.Id == reserva.IdCliente).NroDocumento,
+                    if (reserva == null)
+                        return BadRequest();
 
-                };
-                ReservarVehiculoResponse Reservas = cliente.ReservarVehiculo(res);
-                reserva.CodigoReserva = Reservas.Reserva.CodigoReserva;
-                db.Reserva.Add(reserva);
-                db.SaveChanges();
-                return Ok();
+                    var cliente = new WCF.WCFReservaVehiculosClient();
+                    ReservarVehiculoRequest res = new ReservarVehiculoRequest
+                    {
+                        ApellidoNombreCliente = db.Cliente.Single(a => a.Id == reserva.IdCliente).Apellido + " " + db.Cliente.Single(a => a.Id == reserva.IdCliente).Nombre,
+                        FechaHoraDevolucion = Convert.ToDateTime(reserva.FechaHoraDevolucion),
+                        FechaHoraRetiro = Convert.ToDateTime(reserva.FechaHoraRetiro),
+                        IdVehiculoCiudad = reserva.IdVehiculoCiudad,
+                        LugarRetiro = lugarRetiroDevolucion(reserva.LugarRetiro),
+                        LugarDevolucion = lugarRetiroDevolucion(reserva.LugarDevolucion),
+                        NroDocumentoCliente = db.Cliente.Single(a => a.Id == reserva.IdCliente).NroDocumento,
+
+                    };
+                    ReservarVehiculoResponse Reservas = cliente.ReservarVehiculo(res);
+                    reserva.CodigoReserva = Reservas.Reserva.CodigoReserva;
+                    db.Reserva.Add(reserva);
+                    db.SaveChanges();
+                    return Ok();
+                }
+                return Unauthorized();
             }
             catch (System.ServiceModel.FaultException ex)
             {

@@ -41,16 +41,20 @@ namespace APIVehiculos.Controllers
                 return InternalServerError(ex);} 
         }
 
-        [Route("api/Vehiculos/Ciudades/{IdPais}")]
+        [Route("api/Vehiculos/Ciudades/{IdPais}/{access_token}")]
         [HttpGet]
-        public IHttpActionResult Ciudades(int IdPais)
+        public IHttpActionResult Ciudades(int IdPais, string access_token)
         {
             try
             {
-                var cliente = new WCF.WCFReservaVehiculosClient();
-                var pais = new ConsultarCiudadesRequest { IdPais = IdPais };
-                ConsultarCiudadesResponse Ciudad = cliente.ConsultarCiudades(pais);
-                return Ok(Ciudad.Ciudades);
+                if (Validar(access_token) == true)
+                {
+                    var cliente = new WCF.WCFReservaVehiculosClient();
+                    var pais = new ConsultarCiudadesRequest { IdPais = IdPais };
+                    ConsultarCiudadesResponse Ciudad = cliente.ConsultarCiudades(pais);
+                    return Ok(Ciudad.Ciudades);
+                } 
+                return Unauthorized();
             }
             catch (System.ServiceModel.FaultException ex) {
                 ex = new System.ServiceModel.FaultException(FaultExceptions.FaultException51.ToString());
@@ -62,16 +66,20 @@ namespace APIVehiculos.Controllers
             }
         }
 
-        [Route("api/Vehiculos/VehiculosDisponibles/{IdCiudad}")]
+        [Route("api/Vehiculos/VehiculosDisponibles/{IdCiudad}/{access_token}")]
         [HttpGet]
-        public IHttpActionResult VehiculosDisponibles(int IdCiudad)
+        public IHttpActionResult VehiculosDisponibles(int IdCiudad, string access_token)
         {
             try
             {
-                var cliente = new WCF.WCFReservaVehiculosClient();
-                var Ciudad = new ConsultarVehiculosRequest { IdCiudad = IdCiudad };
-                ConsultarVehiculosDisponiblesResponse VehiculosDisponibles = cliente.ConsultarVehiculosDisponibles(Ciudad);
-                return Ok(VehiculosDisponibles.VehiculosEncontrados);
+                if (Validar(access_token) == true)
+                {
+                    var cliente = new WCF.WCFReservaVehiculosClient();
+                    var Ciudad = new ConsultarVehiculosRequest { IdCiudad = IdCiudad };
+                    ConsultarVehiculosDisponiblesResponse VehiculosDisponibles = cliente.ConsultarVehiculosDisponibles(Ciudad);
+                    return Ok(VehiculosDisponibles.VehiculosEncontrados);
+                }
+                return Unauthorized();
             }
             catch (System.ServiceModel.FaultException ex)
             {
@@ -85,13 +93,17 @@ namespace APIVehiculos.Controllers
             }
         }
 
-        [Route("api/Vehiculos/Cliente")]
+        [Route("api/Vehiculos/Cliente/{access_token}")]
         [HttpGet]
-        public IHttpActionResult Cliente()
+        public IHttpActionResult Cliente(string access_token)
         {
             try
             {
-                return Ok(db.Cliente);
+                if (Validar(access_token) == true)
+                {
+                    return Ok(db.Cliente);
+                }
+                return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -99,13 +111,17 @@ namespace APIVehiculos.Controllers
                 return InternalServerError(ex);
             }
         }
-        [Route("api/Vehiculos/Vendedor")]
+        [Route("api/Vehiculos/Vendedor/{access_token}")]
         [HttpGet]
-        public IHttpActionResult Vendedor()
+        public IHttpActionResult Vendedor(string access_token)
         {
             try
             {
-                return Ok(db.Vendedor);
+                if (Validar(access_token) == true)
+                {
+                    return Ok(db.Vendedor);
+                }
+                return Unauthorized();
             }
             catch (Exception ex)
             {

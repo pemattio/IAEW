@@ -24,12 +24,11 @@ namespace SitioWeb.Controllers
         // GET: /Reserva/
         public ActionResult Index()
         {
-            try
+            List<Reserva> list = new List<Reserva>();
+
+            using (var client = new HttpClient())
             {
-
-                List<Reserva> list = new List<Reserva>();
-
-                using (var client = new HttpClient())
+                try
                 {
                     AccessToken token = (AccessToken)Session["token"];
                     if (token == null)
@@ -40,7 +39,7 @@ namespace SitioWeb.Controllers
                     client.BaseAddress = new Uri(Baseurl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservasTuricor/"+ token.access_token ).Result;
+                    HttpResponseMessage Res = client.GetAsync("api/Reservas/ListadoDeReservasTuricor/" + token.access_token).Result;
                     if (Res.IsSuccessStatusCode)
                     {
                         var ReservaResponse = Res.Content.ReadAsStringAsync().Result;
@@ -53,19 +52,18 @@ namespace SitioWeb.Controllers
                     }
                     return View(list);
                 }
+                catch (HttpRequestException hre) { return RedirectToAction("Error", "Home", new { mensaje = hre.Message }); }
+                catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
             }
-            catch (HttpRequestException hre) { return RedirectToAction("Error", "Home", new { mensaje = hre.Message }); }
-            catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
         }
 
         public ActionResult Todas()
         {
-            try
+            List<Reserva> list = new List<Reserva>();
+
+            using (var client = new HttpClient())
             {
-
-                List<Reserva> list = new List<Reserva>();
-
-                using (var client = new HttpClient())
+                try
                 {
                     AccessToken token = (AccessToken)Session["token"];
                     if (token == null)
@@ -89,9 +87,9 @@ namespace SitioWeb.Controllers
                     }
                     return View(list);
                 }
+                catch (HttpRequestException hre) { return RedirectToAction("Error", "Home", new { mensaje = hre.Message }); }
+                catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
             }
-            catch (HttpRequestException hre) { return RedirectToAction("Error", "Home", new { mensaje = hre.Message }); }
-            catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
         }
 
         public ActionResult Cancelar(string id)
@@ -104,19 +102,31 @@ namespace SitioWeb.Controllers
 
             using (var client = new HttpClient())
             {
-                AccessToken token = (AccessToken)Session["token"];
-                client.BaseAddress = new Uri(Baseurl);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = client.GetAsync("api/Reserva/CancelarReserva/" + id+"/"+token.access_token).Result;
-                if (Res.IsSuccessStatusCode)
+                try
                 {
-                    return RedirectToAction("Index", "Reserva");
+                    AccessToken token = (AccessToken)Session["token"];
+                    if (token == null)
+                    {
+                        token = new AccessToken();
+                        token.access_token = "noAutorizado";
+                    }
+                    client.BaseAddress = new Uri(Baseurl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = client.GetAsync("api/Reserva/CancelarReserva/" + id + "/" + token.access_token).Result;
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index", "Reserva");
 
+                    }
+                    else
+                    {
+                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                    }
                 }
-                return RedirectToAction("Index", "Home");
+                catch (HttpRequestException hre) { return RedirectToAction("Error", "Home", new { mensaje = hre.Message }); }
+                catch (Exception ex) { return RedirectToAction("Error", "Home", new { mensaje = ex.Message }); }
             }
-
         }
 
         protected override void Dispose(bool disposing)
