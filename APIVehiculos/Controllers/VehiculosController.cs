@@ -33,11 +33,15 @@ namespace APIVehiculos.Controllers
                 }
                 return Unauthorized();
             }
-            catch (System.ServiceModel.FaultException ex) {
-                ex = new System.ServiceModel.FaultException(FaultExceptions.FaultException61.ToString());
-                return InternalServerError(ex); }
+            catch (System.ServiceModel.FaultException<APIVehiculos.WCF.StatusResponse> ex) {
+                FaultException fe;
+                fe = new FaultException("Código: " + ex.Detail.ErrorCode.ToString() + ". Descripción: " + ex.Detail.ErrorDescription.ToString());
+                fe.codigo = Convert.ToInt32(ex.Detail.ErrorCode.ToString());
+                fe.descripcion = ex.Detail.ErrorDescription.ToString();
+                return InternalServerError(fe);
+            }
             catch (Exception ex){
-                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
+                ex = new Exception(ex.Message, ex);
                 return InternalServerError(ex);} 
         }
 
@@ -56,12 +60,16 @@ namespace APIVehiculos.Controllers
                 } 
                 return Unauthorized();
             }
-            catch (System.ServiceModel.FaultException ex) {
-                ex = new System.ServiceModel.FaultException(FaultExceptions.FaultException51.ToString());
-                return InternalServerError(ex); }
+            catch (System.ServiceModel.FaultException<APIVehiculos.WCF.StatusResponse> ex){
+                FaultException fe;
+                fe = new FaultException("Código: " + ex.Detail.ErrorCode.ToString() + ". Descripción: " + ex.Detail.ErrorDescription.ToString());
+                fe.codigo = Convert.ToInt32(ex.Detail.ErrorCode.ToString());
+                fe.descripcion = ex.Detail.ErrorDescription.ToString();
+                return InternalServerError(fe);
+            }
             catch (Exception ex)
             {
-                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
+                ex = new Exception(ex.Message, ex);
                 return InternalServerError(ex);
             }
         }
@@ -81,14 +89,17 @@ namespace APIVehiculos.Controllers
                 }
                 return Unauthorized();
             }
-            catch (System.ServiceModel.FaultException ex)
+            catch (System.ServiceModel.FaultException<APIVehiculos.WCF.StatusResponse> ex) 
             {
-                ex = new System.ServiceModel.FaultException(FaultExceptions.FaultException1.ToString());
-                return InternalServerError(ex);
+                FaultException fe;
+                fe = new FaultException("Código: " + ex.Detail.ErrorCode.ToString() + ". Descripción: " + ex.Detail.ErrorDescription.ToString());
+                fe.codigo = Convert.ToInt32(ex.Detail.ErrorCode.ToString());
+                fe.descripcion = ex.Detail.ErrorDescription.ToString();
+                return InternalServerError(fe);
             }
             catch (Exception ex)
             {
-                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
+                ex = new Exception(ex.Message, ex);
                 return InternalServerError(ex);
             }
         }
@@ -107,7 +118,7 @@ namespace APIVehiculos.Controllers
             }
             catch (Exception ex)
             {
-                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
+                ex = new Exception(ex.Message, ex);
                 return InternalServerError(ex);
             }
         }
@@ -125,7 +136,7 @@ namespace APIVehiculos.Controllers
             }
             catch (Exception ex)
             {
-                ex = new Exception(FaultExceptions.FaultException99.ToString(), ex);
+                ex = new Exception(ex.Message, ex);
                 return InternalServerError(ex);
             }
         }

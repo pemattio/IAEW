@@ -126,7 +126,11 @@ namespace SitioWeb.Controllers
 
                 if (!res.IsSuccessStatusCode)
                 {
-                    throw new HttpRequestException("Código: " + (int)res.StatusCode + ". Descripción: " + res.ReasonPhrase);
+                    System.Web.Http.HttpError error = res.Content.ReadAsAsync<System.Web.Http.HttpError>().Result;
+                    if (error != null)
+                        throw new HttpRequestException("Código: " + (int)res.StatusCode + ". Descripción: " + res.ReasonPhrase + ". Detalle: " + error.ExceptionMessage);
+                    else
+                        throw new HttpRequestException("Código: " + (int)res.StatusCode + ". Descripción: " + res.ReasonPhrase);
                 }
                 return true;
             }
@@ -160,7 +164,11 @@ namespace SitioWeb.Controllers
                     }
                     else
                     {
-                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                        System.Web.Http.HttpError error = Res.Content.ReadAsAsync<System.Web.Http.HttpError>().Result;
+                        if (error != null)
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase + ". Detalle: " + error.ExceptionMessage);
+                        else
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
                     }
                     return list;
                 }
@@ -195,7 +203,11 @@ namespace SitioWeb.Controllers
                     }
                     else
                     {
-                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                        System.Web.Http.HttpError error = Res.Content.ReadAsAsync<System.Web.Http.HttpError>().Result;
+                        if (error != null)
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase + ". Detalle: " + error.ExceptionMessage);
+                        else
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
                     }
                     return list;
                 }
@@ -228,7 +240,11 @@ namespace SitioWeb.Controllers
                     }
                     else
                     {
-                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                        System.Web.Http.HttpError error = Res.Content.ReadAsAsync<System.Web.Http.HttpError>().Result;
+                        if (error != null)
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase + ". Detalle: " + error.ExceptionMessage);
+                        else
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
                     }
                     return list;
                 }
@@ -263,7 +279,11 @@ namespace SitioWeb.Controllers
                     }
                     else
                     {
-                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                        System.Web.Http.HttpError error = Res.Content.ReadAsAsync<System.Web.Http.HttpError>().Result;
+                        if (error != null)
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase + ". Detalle: " + error.ExceptionMessage);
+                        else
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
                     }
                     return list;
                 }
@@ -297,7 +317,11 @@ namespace SitioWeb.Controllers
                     }
                     else
                     {
-                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                        System.Web.Http.HttpError error = Res.Content.ReadAsAsync<System.Web.Http.HttpError>().Result;
+                        if (error != null)
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase + ". Detalle: " + error.ExceptionMessage);
+                        else
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
                     }
 
                     return list;

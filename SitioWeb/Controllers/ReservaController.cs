@@ -48,7 +48,11 @@ namespace SitioWeb.Controllers
                     }
                     else
                     {
-                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                        System.Web.Http.HttpError error = Res.Content.ReadAsAsync<System.Web.Http.HttpError>().Result;
+                        if(error!=null)
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase + ". Detalle: "+error.ExceptionMessage);
+                        else
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
                     }
                     return View(list);
                 }
@@ -83,7 +87,11 @@ namespace SitioWeb.Controllers
                     }
                     else
                     {
-                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                        System.Web.Http.HttpError error = Res.Content.ReadAsAsync<System.Web.Http.HttpError>().Result;
+                        if (error != null)
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase + ". Detalle: " + error.ExceptionMessage);
+                        else
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
                     }
                     return View(list);
                 }
@@ -121,7 +129,11 @@ namespace SitioWeb.Controllers
                     }
                     else
                     {
-                        throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
+                        System.Web.Http.HttpError error = Res.Content.ReadAsAsync<System.Web.Http.HttpError>().Result;
+                        if (error != null)
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase + ". Detalle: " + error.ExceptionMessage);
+                        else
+                            throw new HttpRequestException("Código: " + (int)Res.StatusCode + ". Descripción: " + Res.ReasonPhrase);
                     }
                 }
                 catch (HttpRequestException hre) { return RedirectToAction("Error", "Home", new { mensaje = hre.Message }); }
